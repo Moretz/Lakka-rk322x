@@ -1,0 +1,48 @@
+################################################################################
+# setup device defaults
+################################################################################
+
+  # The TARGET_CPU variable controls which processor should be targeted for
+  # generated code.
+    case $TARGET_ARCH in
+      arm)
+        TARGET_FLOAT="hard"
+        TARGET_CPU="cortex-a7"
+        TARGET_FPU="neon-vfpv4"
+        TARGET_FEATURES="32bit"
+        ;;
+    esac
+
+  # Kernel target
+    KERNEL_TARGET="zImage"
+
+    UBOOT_TARGET=""
+
+  # SquashFS compression method (gzip / lzo / xz / zstd)
+    SQUASHFS_COMPRESSION="lzo"
+
+  # Additional kernel make parameters (for example to specify the u-boot loadaddress)
+    KERNEL_MAKE_EXTRACMD=" rk3229-box.dtb \
+		rk3229-box-t95vpro.dtb \
+		rk3229-box-mxq4kpro.dtb \
+		rk3229-box-mxq4kpro-ovclk.dtb \
+		rk3229-box-v884k.dtb \
+		rk3229-box-v884k-ovclk.dtb \
+		rk3229-box-v88mars.dtb \
+		rk3229-box-v88mars-ovclk.dtb \
+		rk3229-box-hk1mini.dtb \
+		rk3229-box-hk1mini-ovclk.dtb \
+		rk3229-box-tx2.dtb \
+		rk3229-box-tx2-ovclk.dtb"
+
+  # Mali GPU family
+    MALI_FAMILY="400"
+    GRAPHIC_DRIVERS="lima"
+
+  # kernel serial console
+    EXTRA_CMDLINE="console=uart8250,mmio32,0x11030000 console=tty0"
+
+  # set the addon project
+    ADDON_PROJECT="ARMv7"
+
+    ADDITIONAL_PACKAGES="$ADDITIONAL_PACKAGES rockchip-firmware RTL8192FU RTL8188FU"

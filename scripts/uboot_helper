@@ -60,11 +60,6 @@ devices = \
         'config': 'beelink_x2_defconfig',
         'crust_config': 'beelink_x2_defconfig'
       },
-      'capcom-home-arcade': {
-        'dtb': 'sun8i-h3-libretech-all-h3-cc.dtb',
-        'config': 'libretech_all_h3_cc_h3_defconfig',
-        'crust_config': 'libretech_all_h3_cc_h3_defconfig',
-      },
       'libretech-h3': {
         'dtb': 'sun8i-h3-libretech-all-h3-cc.dtb',
         'config': 'libretech_all_h3_cc_h3_defconfig',
@@ -244,6 +239,12 @@ devices = \
     },
   },
   'Rockchip': {
+    'RK322x': {
+      'rk322x': {
+        'dtb': 'rk3229-box.dtb',
+        'config': 'rk322x-linux-miniloader_defconfig'
+      },
+    },
     'RK3288': {
       'miqi': {
         'dtb': 'rk3288-miqi.dtb',
@@ -287,10 +288,6 @@ devices = \
       },
       'orangepi': {
         'dtb': 'rk3399-orangepi.dtb',
-        'config': 'evb-rk3399_defconfig'
-      },
-      'orangepi-4-lts': {
-        'dtb': 'rk3399-orangepi-4-lts.dtb',
         'config': 'evb-rk3399_defconfig'
       },
       'rock960': {

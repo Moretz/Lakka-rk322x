@@ -1,5 +1,5 @@
 PKG_NAME="kronos"
-PKG_VERSION="869c46c1d3684d820f5a368bcae1cc95fe5a9888"
+PKG_VERSION="fec6e18cc6f00933f6303a983935a44302f3075f"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/yabause"
 PKG_URL="${PKG_SITE}.git"
@@ -12,6 +12,7 @@ PKG_MAKE_OPTS_TARGET="-C yabause/src/libretro HAVE_CDROM=1"
 
 if [ "${OPENGL_SUPPORT}" = "yes" ]; then
   PKG_DEPENDS_TARGET+=" ${OPENGL}"
+  PKG_MAKE_OPTS_TARGET+=" HAVE_OPENGL=1"
 fi
 
 if [ "${OPENGLES_SUPPORT}" = "yes" ]; then
@@ -24,7 +25,11 @@ if [ "${VULKAN_SUPPORT}" = "yes" ]; then
 fi
 
 if [ "${ARCH}" = "arm" ]; then
-  PKG_MAKE_OPTS_TARGET+=" platform=armv"
+  if [ "${PROJECT}" = "Samsung" -a "${DEVICE}" = "Exynos" ]; then
+    PKG_MAKE_OPTS_TARGET+=" platform=odroid BOARD=ODROID-XU4"
+  else
+    PKG_MAKE_OPTS_TARGET+=" platform=armv"
+  fi
 elif [ "${ARCH}" = "aarch64" ]; then
   PKG_MAKE_OPTS_TARGET+=" platform=arm64"
 fi

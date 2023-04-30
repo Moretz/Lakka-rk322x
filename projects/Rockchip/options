@@ -50,9 +50,9 @@
   # Windowmanager to use (fluxbox / none)
     WINDOWMANAGER="none"
 
-  # Xorg Graphic drivers to use (all / i915,r300,r600,nvidia)
+  # Xorg Graphic drivers to use (all / i915,i965,r200,r300,r600,nvidia)
   # Space separated list is supported,
-  # e.g. GRAPHIC_DRIVERS="i915 r300 r600 radeonsi nvidia"
+  # e.g. GRAPHIC_DRIVERS="i915 i965 r300 r600 radeonsi nvidia"
     GRAPHIC_DRIVERS=""
 
   # KODI Player implementation to use (default / bcm2835-driver / libfslvpuwrap)
@@ -64,7 +64,7 @@
     FIRMWARE="misc-firmware wlan-firmware dvb-firmware brcmfmac_sdio-firmware"
 
   # additional packages to install
-    ADDITIONAL_PACKAGES+=" dtc"
+    ADDITIONAL_PACKAGES="dtc ethmactool"
 
   # build and install CEC framework support (yes / no)
     CEC_FRAMEWORK_SUPPORT="yes"
@@ -78,10 +78,6 @@
   # build and install driver addons (yes / no)
     DRIVER_ADDONS_SUPPORT="no"
 
-    if [ "${DISTRO}" = "Lakka" ]; then
-      DRIVER_ADDONS_SUPPORT="no"
-    fi
-
   # driver addons to install:
   # for a list of additinoal drivers see packages/linux-driver-addons
   # Space separated list is supported,
@@ -89,10 +85,3 @@
 
   # debug tty path
     DEBUG_TTY="/dev/ttyS2"
-
-  # Overrides for Lakka
-    if [ "${DISTRO}" = "Lakka" ]; then
-      LINUX="rockchip"
-      FIRMWARE="${FIRMWARE//dvb-firmware/}"
-    fi
-

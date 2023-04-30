@@ -3088,7 +3088,7 @@ index 3752acd6d370..2b495781c742 100644
 +		.decoded_fmts = rkvdec_vp9_decoded_fmts,
  	}
  };
- 
+
 diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
 index c14cd2571bfc..d760c3609e2c 100644
 --- a/drivers/staging/media/rkvdec/rkvdec.h

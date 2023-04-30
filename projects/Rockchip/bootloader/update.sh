@@ -12,6 +12,9 @@ if [ -z "${BOOT_DISK}" ]; then
     /dev/mmcblk*)
       BOOT_DISK=$(echo ${BOOT_PART} | sed -e "s,p[0-9]*,,g")
       ;;
+    /dev/rknand*)
+      BOOT_DISK=$(echo ${BOOT_PART} | sed -e "s,p[0-9]*,,g")
+      ;;
   esac
 fi
 

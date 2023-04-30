@@ -11,7 +11,7 @@
           <visible>true</visible>
         </setting>
       </group>
-      <group id="4">
+      <group id="3">
         <setting id="videoscreen.noofbuffers">
           <default>2</default>
           <visible>false</visible>

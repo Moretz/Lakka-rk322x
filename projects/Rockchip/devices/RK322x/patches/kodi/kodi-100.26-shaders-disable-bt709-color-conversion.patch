@@ -1,0 +1,40 @@
+diff -rupN a/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag b/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag
+--- a/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag	2020-05-31 19:01:02.000000000 +0200
++++ b/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag	2020-06-22 09:25:42.005994335 +0200
+@@ -61,6 +61,7 @@ void main()
+   rgb = m_yuvmat * yuv;
+   rgb.a = m_alpha;
+ 
++/*
+ #if defined(XBMC_COL_CONVERSION)
+   rgb.rgb = pow(max(vec3(0), rgb.rgb), vec3(m_gammaSrc));
+   rgb.rgb = max(vec3(0), m_primMat * rgb.rgb);
+@@ -72,7 +73,7 @@ void main()
+ #endif
+ 
+ #endif
+-
++*/
+   gl_FragColor = rgb;
+ }
+ 
+diff -rupN a/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag b/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag
+--- a/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag	2020-05-31 19:01:02.000000000 +0200
++++ b/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag	2020-06-22 09:25:56.596994279 +0200
+@@ -81,7 +81,7 @@ void main()
+   rgbBelow.a = m_alpha;
+ 
+   rgb = mix(rgb, rgbBelow, 0.5);
+-
++/*
+ #if defined(XBMC_COL_CONVERSION)
+   rgb.rgb = pow(max(vec3(0), rgb.rgb), vec3(m_gammaSrc));
+   rgb.rgb = max(vec3(0), m_primMat * rgb.rgb);
+@@ -93,6 +93,6 @@ void main()
+ #endif
+ 
+ #endif
+-
++*/
+   gl_FragColor = rgb;
+ }

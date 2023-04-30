@@ -1,0 +1,2302 @@
+diff -ruPN linux/arch/arm/boot/dts/Makefile linux-trip/arch/arm/boot/dts/Makefile
+--- linux/arch/arm/boot/dts/Makefile	2021-10-27 09:56:57.000000000 +0200
++++ linux-trip/arch/arm/boot/dts/Makefile	2023-02-22 16:44:48.268975400 +0100
+@@ -982,6 +982,12 @@
+ 	rk3188-px3-evb.dtb \
+ 	rk3188-radxarock.dtb \
+ 	rk3228-evb.dtb \
++	rk3229-box.dtb \
++	rk3229-box-ovclk.dtb \
++	rk3229-box-mxq4kpro-ovclk.dtb \
++	rk3229-box-mxq4kpro.dtb \
++	rk3229-box-v88mars-ovclk.dtb \
++	rk3229-box-v88mars.dtb \
+ 	rk3229-evb.dtb \
+ 	rk3229-xms6.dtb \
+ 	rk3288-evb-act8846.dtb \
+diff -ruPN linux/arch/arm/boot/dts/rk3229-board-mx4v-v10.dts linux-trip/arch/arm/boot/dts/rk3229-board-mx4v-v10.dts
+--- linux/arch/arm/boot/dts/rk3229-board-mx4v-v10.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-board-mx4v-v10.dts	2023-02-22 16:44:48.268975400 +0100
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp-test.dtsi"
++
++/ {
++	model = "Rockchip MX4V-v10 RK3228A Board";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++		/*
++			little hack
++			this led has an inverted logic, in order to activate
++			when system shutdown/suspend
++		*/
++		led_suspend {
++			gpios = <&gpio0 RK_PA1 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++	};
++};
++
++&dmc {
++    status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-board-mx4vn-v10.dts linux-trip/arch/arm/boot/dts/rk3229-board-mx4vn-v10.dts
+--- linux/arch/arm/boot/dts/rk3229-board-mx4vn-v10.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-board-mx4vn-v10.dts	2023-02-22 16:44:48.269975400 +0100
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp-test.dtsi"
++
++/ {
++	model = "Rockchip MX4VN-v10 RK3228A Board";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++		/*
++			little hack
++			this led has an inverted logic, in order to activate
++			when system shutdown/suspend
++		*/
++		led_suspend {
++			gpios = <&gpio0 RK_PA1 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++	};
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-board-mx4vr-v01.dts linux-trip/arch/arm/boot/dts/rk3229-board-mx4vr-v01.dts
+--- linux/arch/arm/boot/dts/rk3229-board-mx4vr-v01.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-board-mx4vr-v01.dts	2023-02-22 16:44:48.269975400 +0100
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp-test.dtsi"
++
++/ {
++	model = "Rockchip MX4VR-v01 RK3228A Board";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++		/*
++			little hack
++			this led has an inverted logic, in order to activate
++			when system shutdown/suspend
++		*/
++		led_suspend {
++			gpios = <&gpio0 RK_PA1 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++	};
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-hk1mini-ovclk.dts linux-trip/arch/arm/boot/dts/rk3229-box-hk1mini-ovclk.dts
+--- linux/arch/arm/boot/dts/rk3229-box-hk1mini-ovclk.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-hk1mini-ovclk.dts	2023-02-22 16:44:48.269975400 +0100
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp-ovclk.dtsi"
++#include "rk3229-dram-ovclk.dtsi"
++
++/ {
++	model = "Rockchip RK3229 Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++		/*
++			little hack
++			this led has an inverted logic, in order to activate
++			when system shutdown/suspend
++		*/
++		led_suspend {
++			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++};
++
++&dmc {
++	status = "okay";
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-hk1mini.dts linux-trip/arch/arm/boot/dts/rk3229-box-hk1mini.dts
+--- linux/arch/arm/boot/dts/rk3229-box-hk1mini.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-hk1mini.dts	2023-02-22 16:44:48.270975399 +0100
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp.dtsi"
++
++/ {
++	model = "Rockchip RK3229 Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++		/*
++			little hack
++			this led has an inverted logic, in order to activate
++			when system shutdown/suspend
++		*/
++		led_suspend {
++			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++};
++
++&dmc {
++	status = "okay";
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-mxq4kpro-ovclk.dts linux-trip/arch/arm/boot/dts/rk3229-box-mxq4kpro-ovclk.dts
+--- linux/arch/arm/boot/dts/rk3229-box-mxq4kpro-ovclk.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-mxq4kpro-ovclk.dts	2023-02-22 16:44:48.270975399 +0100
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp-ovclk.dtsi"
++#include "rk3229-dram-ovclk.dtsi"
++
++/ {
++	model = "Rockchip RK3229 Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++		/*
++			little hack
++			this led has an inverted logic, in order to activate
++			when system shutdown/suspend
++		*/
++		led_suspend {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++};
++
++&dmc {
++	status = "okay";
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-mxq4kpro.dts linux-trip/arch/arm/boot/dts/rk3229-box-mxq4kpro.dts
+--- linux/arch/arm/boot/dts/rk3229-box-mxq4kpro.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-mxq4kpro.dts	2023-02-27 14:19:01.667614066 +0100
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk322x-cpu-opp.dtsi"
++/ {
++	model = "Rockchip RK3229 Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++		/*
++			little hack
++			this led has an inverted logic, in order to activate
++			when system shutdown/suspend
++		*/
++		led_suspend {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++};
++
++&dmc {
++	status = "okay";
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-t95vpro.dts linux-trip/arch/arm/boot/dts/rk3229-box-t95vpro.dts
+--- linux/arch/arm/boot/dts/rk3229-box-t95vpro.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-t95vpro.dts	2023-02-27 14:19:12.976613213 +0100
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk322x-cpu-opp.dtsi"
++
++/ {
++	model = "Rockchip RK3229 Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++		/*
++			little hack
++			this led has an inverted logic, in order to activate
++			when system shutdown/suspend
++		*/
++		led_suspend {
++			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++};
++
++&dmc {
++	status = "okay";
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-tx2-ovclk.dts linux-trip/arch/arm/boot/dts/rk3229-box-tx2-ovclk.dts
+--- linux/arch/arm/boot/dts/rk3229-box-tx2-ovclk.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-tx2-ovclk.dts	2023-02-22 16:44:48.288975398 +0100
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp-ovclk.dtsi"
++#include "rk3229-dram-ovclk.dtsi"
++
++/ {
++	model = "Rockchip Tanix TX2 Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++	};
++};
++
++&dmc {
++	status = "okay";
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-tx2.dts linux-trip/arch/arm/boot/dts/rk3229-box-tx2.dts
+--- linux/arch/arm/boot/dts/rk3229-box-tx2.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-tx2.dts	2023-02-22 16:44:48.288975398 +0100
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp.dtsi"
++
++/ {
++	model = "Rockchip Tanix TX2 Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++	};
++};
++
++&dmc {
++	status = "okay";
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-v884k-ovclk.dts linux-trip/arch/arm/boot/dts/rk3229-box-v884k-ovclk.dts
+--- linux/arch/arm/boot/dts/rk3229-box-v884k-ovclk.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-v884k-ovclk.dts	2023-02-22 16:44:48.288975398 +0100
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp-ovclk.dtsi"
++#include "rk3229-dram-ovclk.dtsi"
++
++/ {
++	model = "Rockchip RK3229 Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++	};
++};
++
++&dmc {
++	status = "okay";
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-v884k.dts linux-trip/arch/arm/boot/dts/rk3229-box-v884k.dts
+--- linux/arch/arm/boot/dts/rk3229-box-v884k.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-v884k.dts	2023-02-22 16:44:48.289975398 +0100
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp.dtsi"
++
++/ {
++	model = "Rockchip RK3229 Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++	};
++};
++
++&dmc {
++	status = "okay";
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-v88mars-ovclk.dts linux-trip/arch/arm/boot/dts/rk3229-box-v88mars-ovclk.dts
+--- linux/arch/arm/boot/dts/rk3229-box-v88mars-ovclk.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-v88mars-ovclk.dts	2023-02-22 16:44:48.289975398 +0100
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk3229-cpu-opp-ovclk.dtsi"
++
++/ {
++	model = "Rockchip V88Mars Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++		/* 
++			little hack 
++			this led has an inverted logic, in order to activate
++			when system shutdown/suspend
++		*/
++		led_suspend {
++			gpios = <&gpio0 RK_PA1 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++	};
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
++
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box-v88mars.dts linux-trip/arch/arm/boot/dts/rk3229-box-v88mars.dts
+--- linux/arch/arm/boot/dts/rk3229-box-v88mars.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box-v88mars.dts	2023-02-27 14:19:30.275611909 +0100
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk322x-cpu-opp.dtsi"
++
++/ {
++	model = "Rockchip V88Mars Box";
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_power {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "rk-remote-feedback";
++		};
++		/* 
++			little hack 
++			this led has an inverted logic, in order to activate
++			when system shutdown/suspend
++		*/
++		led_suspend {
++			gpios = <&gpio0 RK_PA1 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++	};
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-box.dts linux-trip/arch/arm/boot/dts/rk3229-box.dts
+--- linux/arch/arm/boot/dts/rk3229-box.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-box.dts	2023-02-27 14:15:39.479629310 +0100
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include "rk322x-box-dcdc.dtsi"
++#include "rk322x-cpu-opp.dtsi"
++
++/ {
++	model = "Rockchip RK3229 Box";
++};
++
++&emmc {
++	status = "okay";
++};
++
++&nandc {
++	status = "okay";
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-cpu-opp-ovclk.dtsi linux-trip/arch/arm/boot/dts/rk3229-cpu-opp-ovclk.dtsi
+--- linux/arch/arm/boot/dts/rk3229-cpu-opp-ovclk.dtsi	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-cpu-opp-ovclk.dtsi	2023-02-27 14:45:09.899495825 +0100
+@@ -0,0 +1,61 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
++ */
++
++/ {
++	compatible = "rockchip,rk3229";
++
++	/delete-node/ opp-table0;
++
++	cpu0_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-408000000 {
++			opp-hz = /bits/ 64 <408000000>;
++			opp-microvolt = <975000 975000 1375000>;
++			clock-latency-ns = <40000>;
++			opp-suspend;
++			status = "okay";
++		};
++		opp-600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <1000000 1000000 1375000>;
++			opp-suspend;
++			status = "okay";
++		};
++		opp-816000000 {
++			opp-hz = /bits/ 64 <816000000>;
++			opp-microvolt = <1025000 1025000 1375000>;
++			opp-suspend;
++		};
++		opp-1008000000 {
++			opp-hz = /bits/ 64 <1008000000>;
++			opp-microvolt = <1075000 1075000 1375000>;
++		};
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1175000 1175000 1375000>;
++		};
++		opp-1296000000 {
++			opp-hz = /bits/ 64 <1296000000>;
++			opp-microvolt = <1225000 1225000 1375000>;
++		};
++		opp-1392000000 {
++			opp-hz = /bits/ 64 <1392000000>;
++			opp-microvolt = <1275000 1275000 1375000>;
++		};
++		opp-1488000000 {
++			opp-hz = /bits/ 64 <1488000000>;
++			opp-microvolt = <1325000 1325000 1375000>;
++		};
++	};
++};
++
++&gpu_opp_table {
++                opp-500000000 {
++                        status = "okay";
++                };
++
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-cpu-opp-test.dtsi linux-trip/arch/arm/boot/dts/rk3229-cpu-opp-test.dtsi
+--- linux/arch/arm/boot/dts/rk3229-cpu-opp-test.dtsi	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-cpu-opp-test.dtsi	2023-02-22 16:44:48.290975398 +0100
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/ {
++	/delete-node/ opp-table0;
++
++	cpu0_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-408000000 {
++			opp-hz = /bits/ 64 <408000000>;
++			opp-microvolt = <950000 950000 1200000>;
++			clock-latency-ns = <40000>;
++			opp-suspend;
++			status = "okay";
++		};
++		opp-600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <950000 950000 1200000>;
++		};
++		opp-816000000 {
++			opp-hz = /bits/ 64 <816000000>;
++			opp-microvolt = <975000 975000 1200000>;
++		};
++		opp-1008000000 {
++			opp-hz = /bits/ 64 <1008000000>;
++			opp-microvolt = <1000000 1000000 1200000>;
++		};
++		opp-1104000000 {
++			opp-hz = /bits/ 64 <1104000000>;
++			opp-microvolt = <1050000 1050000 1200000>;
++		};
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1100000 1100000 1200000>;
++		};
++		opp-1296000000 {
++			opp-hz = /bits/ 64 <1296000000>;
++			opp-microvolt = <1150000 1150000 1200000>;
++		};
++		opp-1392000000 {
++			opp-hz = /bits/ 64 <1392000000>;
++			opp-microvolt = <1200000 1200000 1200000>;
++		};
++	};
++};
++
+diff -ruPN linux/arch/arm/boot/dts/rk3229-cpu-opp.dtsi linux-trip/arch/arm/boot/dts/rk3229-cpu-opp.dtsi
+--- linux/arch/arm/boot/dts/rk3229-cpu-opp.dtsi	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-cpu-opp.dtsi	2023-02-27 14:45:44.510493215 +0100
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
++ */
++
++/ {
++	compatible = "rockchip,rk3229";
++
++	/delete-node/ opp-table0;
++
++	cpu0_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-408000000 {
++			opp-hz = /bits/ 64 <408000000>;
++			opp-microvolt = <975000 975000 1275000>;
++			clock-latency-ns = <40000>;
++			opp-suspend;
++		};
++		opp-600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <1000000 1000000 1275000>;
++		};
++		opp-816000000 {
++			opp-hz = /bits/ 64 <816000000>;
++			opp-microvolt = <1025000 1025000 1275000>;
++		};
++		opp-1008000000 {
++			opp-hz = /bits/ 64 <1008000000>;
++			opp-microvolt = <1075000 1075000 1275000>;
++		};
++		opp-1104000000 {
++			opp-hz = /bits/ 64 <1104000000>;
++			opp-microvolt = <1125000 1125000 1200000>;
++		};
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1175000 1175000 1275000>;
++		};
++		opp-1296000000 {
++			opp-hz = /bits/ 64 <1296000000>;
++			opp-microvolt = <1225000 1225000 1275000>;
++		};
++		opp-1392000000 {
++			opp-hz = /bits/ 64 <1392000000>;
++			opp-microvolt = <1275000 1275000 1275000>;
++		};
++    };
++};
++
++&gpu_opp_table {
++                opp-500000000 {
++                        status = "okay";
++                };
++};
+diff -ruPN linux/arch/arm/boot/dts/rk3229-dram-ovclk.dtsi linux-trip/arch/arm/boot/dts/rk3229-dram-ovclk.dtsi
+--- linux/arch/arm/boot/dts/rk3229-dram-ovclk.dtsi	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk3229-dram-ovclk.dtsi	2023-02-22 16:44:48.291975398 +0100
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
++ */
++
++/ {
++	compatible = "rockchip,rk3229";
++
++};
++
++&dmc_opp_table {
++
++		opp-500000000 {
++			status = "disabled";
++		};
++		opp-600000000 {
++			status = "okay";
++		};
++
++};
+diff -ruPN linux/arch/arm/boot/dts/rk322x-box-dcdc.dtsi linux-trip/arch/arm/boot/dts/rk322x-box-dcdc.dtsi
+--- linux/arch/arm/boot/dts/rk322x-box-dcdc.dtsi	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk322x-box-dcdc.dtsi	2023-02-22 16:44:48.291975398 +0100
+@@ -0,0 +1,163 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/rockchip.h>
++#include "rk322x-box.dtsi"
++
++/ {
++
++	vcc_sys: vcc-sys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++
++	vcc_host: vcc-host-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio3 RK_PC4 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&host_vbus_drv>;
++		regulator-name = "vcc_host";
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++	};
++
++	vccio_1v8: vccio-1v8-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vccio_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		vin-supply = <&vcc_sys>;
++	};
++
++	vccio_3v3: vccio-3v3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vccio_3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		vin-supply = <&vcc_sys>;
++	};
++
++
++	vcc_otg: vcc-otg-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio3 RK_PC6 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&otg_vbus_drv>;
++		regulator-name = "vcc_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++	};
++
++	vcc_phy: vcc-phy-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		regulator-name = "vcc_phy";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vccio_1v8>;
++	};
++
++	vdd_arm: vdd-arm-regulator {
++		compatible = "pwm-regulator";
++		pwms = <&pwm1 0 2000 0>;
++		pwm-supply = <&vcc_sys>;
++		regulator-name = "vdd_arm";
++		regulator-min-microvolt = <950000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-ramp-delay = <4000>;
++		pwm-dutycycle-range = <90 0>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vdd_log: vdd-log-regulator {
++		compatible = "pwm-regulator";
++		pwms = <&pwm2 0 5000 0>;
++		pwm-supply = <&vcc_sys>;
++		regulator-name = "vdd_log";
++		regulator-min-microvolt = <1000000>;
++		regulator-max-microvolt = <1300000>;
++		regulator-ramp-delay = <6000>;
++		pwm-dutycycle-range = <100 0>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++};
++
++&cpu0 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&io_domains {
++	vccio1-supply = <&vccio_3v3>;
++	vccio2-supply = <&vccio_1v8>;
++	vccio4-supply = <&vccio_3v3>;
++	status = "okay";
++};
++
++&gmac {
++	phy-supply = <&vcc_phy>;
++};
++
++&gpu {
++	mali-supply = <&vdd_log>;
++};
++
++&pwm1 {
++	pinctrl-0 = <&pwm1_pin_pull_down>;
++	status = "okay";
++};
++
++&pwm2 {
++	pinctrl-0 = <&pwm2_pin_pull_up>;
++	status = "okay";
++};
++
++&u2phy0 {
++	u2phy0_host: host-port {
++		phy-supply = <&vcc_host>;
++	};
++
++	u2phy0_otg: otg-port {
++		phy-supply = <&vcc_otg>;
++	};
++};
++
++&u2phy1 {
++	u2phy1_host: host-port {
++		phy-supply = <&vcc_host>;
++	};
++
++	u2phy1_otg: otg-port {
++		phy-supply = <&vcc_otg>;
++	};
++};
+diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-trip/arch/arm/boot/dts/rk322x-box.dtsi
+--- linux/arch/arm/boot/dts/rk322x-box.dtsi	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk322x-box.dtsi	2023-03-02 11:35:04.945957102 +0100
+@@ -0,0 +1,1087 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++
++#include <dt-bindings/clock/rk3228-cru.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/rockchip.h>
++#include <dt-bindings/suspend/rockchip-rk322x.h>
++#include "rk322x.dtsi"
++
++/ {
++	model = "Rockchip RK322x Box";
++	compatible = "rockchip,rk3229";
++
++	chosen {
++		bootargs = "earlyprintk=uart8250,mmio32,0x11030000";
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		autorepeat;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwr_key>;
++
++		power_key: power-key {
++			label = "GPIO Key Power";
++			gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			debounce-interval = <100>;
++			wakeup-source;
++			status = "okay";
++		};
++	};
++
++	ir_receiver: ir-receiver {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpio1 RK_PB3 GPIO_ACTIVE_LOW>;
++		pinctrl-0 = <&ir_int>;
++		pinctrl-names = "default";
++		status = "disabled";
++	};
++
++	memory@60000000 {
++		device_type = "memory";
++		reg = <0x60000000 0x40000000>;
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_enable_h>;
++		reset-gpios = <&gpio2 26 GPIO_ACTIVE_LOW>,
++			<&gpio2 29 GPIO_ACTIVE_LOW>;
++	};
++
++	timer {
++		/delete-property/ arm,cpu-registers-not-fw-configured;
++	};
++
++	spdif_out: spdif-out {
++		status = "okay";
++		compatible = "linux,spdif-dit";
++		#sound-dai-cells = <0>;
++	};
++
++	spdif-sound {
++		status = "okay";
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "SPDIF";
++		simple-audio-card,cpu {
++			sound-dai = <&spdif>;
++		};
++		simple-audio-card,codec {
++			sound-dai = <&spdif_out>;
++		};
++	};
++
++	nandc: nandc@30030000 {
++		compatible = "rockchip,rk-nandc";
++		reg = <0x30030000 0x4000>;
++		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++		nandc_id = <0>;
++		clocks = <&cru SCLK_NANDC>, <&cru HCLK_NANDC>;
++		clock-names = "clk_nandc", "hclk_nandc";
++		status = "disabled";
++	};
++
++	rockchip_suspend: rockchip-suspend {
++		compatible = "rockchip,pm-rk322x";
++		status = "okay";
++		rockchip,virtual-poweroff = <1>;
++		rockchip,sleep-mode-config = <
++			(0
++			|RKPM_CTR_GTCLKS
++			|RKPM_CTR_IDLESRAM_MD
++			)
++		>;
++	};
++};
++
++&dmc {
++    logic-supply = <&vdd_log>;
++};
++
++&cpu_alert0 {
++	temperature = <85000>;
++};
++
++&cpu_alert1 {
++	temperature = <95000>;
++};
++
++&cpu_crit {
++	temperature = <105000>;
++};
++
++&cru {
++	assigned-clocks = <&cru PLL_GPLL>, <&cru ARMCLK>,
++			  <&cru PLL_CPLL>, <&cru ACLK_PERI>,
++			  <&cru HCLK_PERI>, <&cru PCLK_PERI>,
++			  <&cru ACLK_CPU>, <&cru HCLK_CPU>,
++			  <&cru PCLK_CPU>, <&cru ACLK_VOP>;
++
++	assigned-clock-rates = <1200000000>, <816000000>,
++				<500000000>, <150000000>,
++				<150000000>, <75000000>,
++				<150000000>, <150000000>,
++				<75000000>, <400000000>;
++};
++
++&emmc {
++	/delete-property/ pinctrl-names;
++	/delete-property/ pinctrl-0;
++	/delete-property/ rockchip,default-sample-phase;
++
++	cap-mmc-highspeed;
++	keep-power-in-suspend;
++	non-removable;
++};
++
++&gmac {
++	assigned-clocks = <&cru SCLK_MAC_SRC>;
++	assigned-clock-rates = <50000000>;
++	clock_in_out = "output";
++	phy-handle = <&phy>;
++	phy-mode = "rmii";
++	status = "okay";
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		phy: phy@0 {
++			compatible = "ethernet-phy-id1234.d400",
++			             "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++			clocks = <&cru SCLK_MAC_PHY>;
++			phy-is-integrated;
++			resets = <&cru SRST_MACPHY>;
++		};
++	};
++};
++
++&gpu {
++	/*assigned-clocks = <&cru ACLK_GPU>;
++	assigned-clock-rates = <300000000>;*/
++};
++
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_sound {
++	status = "okay";
++};
++
++&hdmi_phy {
++	status = "okay";
++};
++
++&i2s0 {
++	status = "okay";
++};
++
++&i2s1 {
++	status = "okay";
++};
++
++&pinctrl {
++
++	ir {
++		ir_int: ir-int {
++			rockchip,pins = <1 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	keys {
++		pwr_key: pwr-key {
++			rockchip,pins = <3 RK_PC7 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	pwm1 {
++		pwm1_pin_pull_down: pwm1-pin-pull-down {
++			rockchip,pins = <0 RK_PD6 2 &pcfg_pull_down>;
++		};
++	};
++
++	pwm2 {
++		pwm2_pin_pull_up: pwm2-pin-pull-up {
++			rockchip,pins = <1 RK_PB4 2 &pcfg_pull_up>;
++		};
++	};
++
++	sdio-pwrseq {
++		wifi_enable_h: wifi-enable-h {
++			rockchip,pins = <2 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	usb {
++		host_vbus_drv: host-vbus-drv {
++			rockchip,pins = <3 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		otg_vbus_drv: otg-vbus-drv {
++			rockchip,pins = <3 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++};
++
++&sdio {
++	mmc-pwrseq = <&sdio_pwrseq>;
++	cap-sd-highspeed;
++	cap-sdio-irq;
++	keep-power-in-suspend;
++	non-removable;
++	no-sd;
++	no-mmc;
++	status = "okay";
++};
++
++&sdmmc {
++	/*/delete-property/ pinctrl-names;
++	/delete-property/ pinctrl-0;*/
++
++	cap-sd-highspeed;
++	keep-power-in-suspend;
++	no-sdio;
++	no-mmc;
++	cd-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_LOW>;
++	cd-debounce-delay-ms = <500>;
++	status = "okay";
++};
++
++&tsadc {
++	
++	rockchip,grf = <&grf>;
++	rockchip,hw-tshut-mode = <0>;
++	rockchip,hw-tshut-polarity = <1>;
++	rockchip,hw-tshut-temp = <105000>;
++	status = "okay";
++};
++
++&u2phy0 {
++	status = "okay";
++};
++
++&u2phy0_otg {
++	status = "okay";
++};
++
++&u2phy0_host {
++	status = "okay";
++};
++
++&u2phy1 {
++	status = "okay";
++};
++
++&u2phy1_otg {
++	status = "okay";
++};
++
++&u2phy1_host {
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart11_xfer &uart11_rts &uart11_cts>;
++	uart-has-rtscts;
++	status = "okay";
++	bluetooth {
++		compatible = "realtek,rtl8723cs-bt";
++		enable-gpios = <&gpio2 RK_PD5 GPIO_ACTIVE_HIGH>;
++		device-wake-gpios = <&gpio3 RK_PD3 GPIO_ACTIVE_HIGH>;
++		host-wake-gpios = <&gpio3 RK_PD2 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host0_ohci {
++	status = "okay";
++};
++
++&usb_host1_ehci {
++	status = "okay";
++};
++
++&usb_host1_ohci {
++	status = "okay";
++};
++
++&usb_host2_ehci {
++	status = "okay";
++};
++
++&usb_host2_ohci {
++	status = "okay";
++};
++
++&usb_otg {
++  dr_mode = "host";
++	status = "okay";
++};
++
++&spdif {
++	status = "okay";
++};
++
++&vop {
++	assigned-clocks = <&cru DCLK_VOP>;
++	assigned-clock-parents = <&cru SCLK_HDMI_PHY>;
++	status = "okay";
++};
++
++&vop_mmu {
++	status = "okay";
++};
++
++&wdt {
++	status = "okay";
++};
++
++&codec {
++	status = "okay";
++	#sound-dai-cells = <0>;
++};
++
++&analog_sound {
++	status = "okay";
++};
++
++&pwm3 {
++	status = "okay";
++	interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm3_pin>;
++	compatible = "rockchip,remotectl-pwm";
++	remote_pwm_id = <3>;
++	handle_cpu_id = <1>;
++	remote_support_psci = <1>;
++
++	ir_key1 {
++		rockchip,usercode = <0xef10>;
++		rockchip,key_table =
++			<0xa2 KEY_POWER>,
++			<0xe8 KEY_VOLUMEUP>,
++			<0xec KEY_VOLUMEDOWN>,
++			<0xa6 KEY_F13>,
++			<0xa5 KEY_O>,
++			<0xff KEY_BACK>,
++			<0xba KEY_UP>,
++			<0xf8 KEY_LEFT>,
++			<0xbe KEY_ENTER>,
++			<0xfe KEY_RIGHT>,
++			<0xaa KEY_DOWN>,
++			<0xb9 KEY_HOMEPAGE>,
++			<0xfa KEY_I>,
++			<0xe5 KEY_REWIND>,
++			<0xa7 KEY_PLAYPAUSE>,
++			<0xe2 KEY_FASTFORWARD>,
++			<0xa0 KEY_KP6>,
++			<0xb0 KEY_0>,
++			<0xa1 KEY_BACKSPACE>,
++			<0xaf KEY_1>,
++			<0xad KEY_2>,
++			<0xef KEY_3>,
++			<0xb3 KEY_4>,
++			<0xb5 KEY_5>,
++			<0xee KEY_6>,
++			<0xf0 KEY_7>,
++			<0xb1 KEY_8>,
++			<0xf2 KEY_9>;
++
++	};
++
++	ir_key2 {
++		rockchip,usercode = <0xff00>;
++		rockchip,key_table =
++			<0xe5 KEY_HOMEPAGE>,
++			<0xaf KEY_BACK>,
++			<0xb1 KEY_I>,
++			<0xfd KEY_ENTER>,
++			<0xbc KEY_MUTE>,
++			<0xf5 KEY_DOWN>,
++			<0xf9 KEY_LEFT>,
++			<0xf1 KEY_RIGHT>,
++			<0xa7 KEY_VOLUMEDOWN>,
++			<0xe4 KEY_VOLUMEUP>,
++			<0xa8 KEY_F15>,
++			<0xb2 KEY_O>,
++			<0xb0 KEY_F13>,
++			<0xa4 KEY_F14>,
++			<0xab KEY_F16>,
++			<0xb3 KEY_HANJA>,
++			<0xf0 KEY_SPACE>,
++			<0xef KEY_1>,
++			<0xee KEY_2>,
++			<0xed KEY_3>,
++			<0xec KEY_4>,
++			<0xeb KEY_POWER>,
++			<0xea KEY_6>,
++			<0xe8 KEY_7>,
++			<0xe7 KEY_8>,
++			<0xe6 KEY_9>,
++			<0xe2 KEY_0>,
++			<0xe1 KEY_BACKSPACE>;
++
++	};
++
++	ir_key3 {
++		rockchip,usercode = <0x7f80>;
++		rockchip,key_table = 
++	<0xae KEY_POWER>,
++            <0xb2 KEY_MUTE>,
++            <0xf6 KEY_RED>,
++            <0xee KEY_GREEN>,
++            <0xab KEY_YELLOW>,
++            <0xb0 KEY_BLUE>,
++            <0xa9 KEY_VOLUMEDOWN>,
++            <0x42 KEY_REWIND>,
++            <0x44 KEY_FORWARD>,
++            <0xb1 KEY_VOLUMEUP>,
++            <0xac KEY_HOME>,
++            <0xe4 KEY_BACK>,
++            <0xda KEY_LEFT>,
++            <0xd9 KEY_UP>,
++            <0xf2 KEY_OK>,
++            <0xd8 KEY_RIGHT>,
++            <0xd7 KEY_DOWN>,
++            <0xb6 KEY_MENU>,
++            <0xce KEY_1>,
++            <0xcd KEY_2>,
++            <0xcc KEY_3>,
++            <0xcb KEY_4>,
++            <0xca KEY_5>,
++            <0xc9 KEY_6>,
++            <0xc8 KEY_7>,
++            <0xc7 KEY_8>,
++            <0xc6 KEY_9>,
++            <0xa7 KEY_O>,
++            <0xcf KEY_0>,
++            <0xbb KEY_BACKSPACE>,
++            <0xad KEY_I>;
++	};
++
++	ir_key4 {
++		rockchip,usercode = <0xfe01>;
++		rockchip,key_table =
++			<0xec KEY_ENTER>,
++			<0xe6 KEY_BACK>,
++			<0xe9 KEY_UP>,
++			<0xe5 KEY_DOWN>,
++			<0xae KEY_LEFT>,
++			<0xaf KEY_RIGHT>,
++			<0xee KEY_HOMEPAGE>,
++			<0xe7 KEY_VOLUMEUP>,
++			<0xef KEY_VOLUMEDOWN>,
++			<0xbf KEY_POWER>,
++			<0xbe KEY_MUTE>,
++			<0xb3 KEY_I>,
++			<0xb4 KEY_PAGEDOWN>,
++			<0xb0 KEY_PAGEUP>,
++			<0xff KEY_O>,
++			<0xb1 KEY_1>,
++			<0xf2 KEY_2>,
++			<0xf3 KEY_3>,
++			<0xb5 KEY_4>,
++			<0xf6 KEY_5>,
++			<0xf7 KEY_6>,
++			<0xb9 KEY_7>,
++			<0xfa KEY_8>,
++			<0xfb KEY_9>,
++			<0xfe KEY_0>,
++			<0xbd KEY_BACKSPACE>,
++			<0xbc KEY_F13>,
++			<0xf0 KEY_F14>;
++
++	};
++
++	ir_key5 {
++		rockchip,usercode = <0x1dcc>;
++		rockchip,key_table =
++			<0xee KEY_ENTER>,
++			<0xf0 KEY_BACK>,
++			<0xf8 KEY_UP>,
++			<0xbb KEY_DOWN>,
++			<0xef KEY_LEFT>,
++			<0xed KEY_RIGHT>,
++			<0xf1 KEY_VOLUMEUP>,
++			<0xfd KEY_VOLUMEDOWN>,
++			<0xff KEY_POWER>,
++			<0xf3 KEY_MUTE>,
++			<0xbf KEY_I>,
++			<0xbe KEY_1>,
++			<0xba KEY_2>,
++			<0xb2 KEY_3>,
++			<0xbd KEY_4>,
++			<0xb9 KEY_5>,
++			<0xb1 KEY_6>,
++			<0xbc KEY_7>,
++			<0xb8 KEY_8>,
++			<0xb0 KEY_9>,
++			<0xb6 KEY_0>,
++			<0xb5 KEY_BACKSPACE>;
++	};
++
++	ir_key6 {
++		rockchip,usercode = <0x4040>;
++		rockchip,key_table =
++			<0xf2 KEY_ENTER>,
++			<0xbd KEY_BACK>,
++			<0xf4 KEY_UP>,
++			<0xf1 KEY_DOWN>,
++			<0xef KEY_LEFT>,
++			<0xee KEY_RIGHT>,
++			<0xea KEY_VOLUMEUP>,
++			<0xe3 KEY_VOLUMEDOWN>,
++			<0xb2 KEY_POWER>,
++			<0xbc KEY_MUTE>,
++			<0xba KEY_I>,
++			<0xfe KEY_1>,
++			<0xfd KEY_2>,
++			<0xfc KEY_3>,
++			<0xfb KEY_4>,
++			<0xfa KEY_5>,
++			<0xf9 KEY_6>,
++			<0xf8 KEY_7>,
++			<0xf7 KEY_8>,
++			<0xf6 KEY_9>,
++			<0xff KEY_0>,
++			<0xf3 KEY_BACKSPACE>;
++	};
++
++	ir_key7 {
++		rockchip,usercode = <0xfd01>;
++		rockchip,key_table =
++			<0x31 KEY_ENTER>,
++			<0x29 KEY_BACK>,
++			<0x2e KEY_BACK>,
++			<0x35 KEY_UP>,
++			<0x2d KEY_DOWN>,
++			<0x66 KEY_LEFT>,
++			<0x3e KEY_RIGHT>,
++			<0x6a KEY_HOMEPAGE>,
++			<0x7a KEY_VOLUMEUP>,
++			<0x79 KEY_VOLUMEDOWN>,
++			<0x23 KEY_POWER>,
++			<0x76 KEY_MUTE>,
++			<0x3a KEY_I>,
++			<0x72 KEY_O>,
++			<0x6d KEY_1>,
++			<0x6c KEY_2>,
++			<0x33 KEY_3>,
++			<0x71 KEY_4>,
++			<0x70 KEY_5>,
++			<0x37 KEY_6>,
++			<0x75 KEY_7>,
++			<0x74 KEY_8>,
++			<0x3b KEY_9>,
++			<0x78 KEY_0>,
++			<0x2c KEY_BACKSPACE>,
++			<0x65 KEY_SETUP>,
++			<0x22 KEY_UP>,
++			<0x73 KEY_DOWN>;
++
++	};
++
++	ir_key8 {
++		rockchip,usercode = <0xfd02>;
++		rockchip,key_table =
++			<0xf2 KEY_ENTER>,
++			<0xec KEY_BACK>,
++			<0xfb KEY_VIDEO_PREV>,
++			<0xee KEY_DOWN>,
++			<0xf5 KEY_LEFT>,
++			<0xf1 KEY_RIGHT>,
++			<0xef KEY_HOMEPAGE>,
++			<0xf8 KEY_VOLUMEUP>,
++			<0xf9 KEY_VOLUMEDOWN>,
++			<0xf7 KEY_POWER>,
++			<0xf4 KEY_MUTE>,
++			<0xf3 KEY_I>,
++			<0xbf KEY_O>,
++			<0xeb KEY_1>,
++			<0xea KEY_2>,
++			<0xe9 KEY_3>,
++			<0xe7 KEY_4>,
++			<0xe6 KEY_5>,
++			<0xe5 KEY_6>,
++			<0xe3 KEY_7>,
++			<0xe2 KEY_8>,
++			<0xe1 KEY_9>,
++			<0xbe KEY_0>,
++			<0xbd KEY_BACKSPACE>,
++			<0xf0 KEY_SETUP>,
++			<0xfa KEY_VIDEO_NEXT>,
++			<0xe4 KEY_F4>,
++			<0xd4 KEY_F5>;
++
++	};
++
++	ir_key9 {
++		rockchip,usercode = <0xf709>;
++		rockchip,key_table =
++			<0xe0 KEY_ENTER>,
++			<0xe3 KEY_BACK>,
++			<0xff KEY_UP>,
++			<0xfe KEY_DOWN>,
++			<0xfc KEY_LEFT>,
++			<0xfd KEY_RIGHT>,
++			<0xf3 KEY_HOMEPAGE>,
++			<0xa7 KEY_VOLUMEUP>,
++			<0xa2 KEY_VOLUMEDOWN>,
++			<0xea KEY_5>,
++			<0xf5 KEY_POWER>,
++			<0xf2 KEY_MUTE>,
++			<0xe5 KEY_I>,
++			<0xb5 KEY_O>,
++			<0xee KEY_1>,
++			<0xed KEY_2>,
++			<0xec KEY_3>,
++			<0xeb KEY_4>,
++			<0xe9 KEY_6>,
++			<0xe8 KEY_7>,
++			<0xe7 KEY_8>,
++			<0xe6 KEY_9>,
++			<0xef KEY_0>,
++			<0xcf KEY_BACKSPACE>,
++			<0xae KEY_PAGEUP>,
++			<0xad KEY_PAGEDOWN>,
++			<0xf0 KEY_F1>,
++			<0xbb KEY_REWIND>,
++			<0xba KEY_FORWARD>,
++			<0xf8 KEY_PLAYPAUSE>,
++			<0xf1 KEY_F5>,
++			<0xe1 KEY_F3>,
++			<0xbf KEY_F4>,
++			<0xf4 KEY_STOP>;
++
++	};
++
++	ir_key10 {
++		rockchip,usercode = <0x7984>;
++		rockchip,key_table =
++			<0xf7 KEY_ENTER>,
++			<0xe5 KEY_BACK>,
++			<0xfa KEY_UP>,
++			<0xff KEY_DOWN>,
++			<0xf8 KEY_LEFT>,
++			<0xf6 KEY_RIGHT>,
++			<0xdf KEY_HOMEPAGE>,
++			<0xef KEY_VOLUMEUP>,
++			<0xf0 KEY_VOLUMEDOWN>,
++			<0xed KEY_POWER>,
++			<0xe2 KEY_MUTE>,
++			<0xd7 KEY_I>,
++			<0xe6 KEY_O>,
++			<0xf4 KEY_1>,
++			<0xf3 KEY_2>,
++			<0xf2 KEY_3>,
++			<0xf1 KEY_4>,
++			<0xee KEY_5>,
++			<0xd8 KEY_6>,
++			<0xec KEY_7>,
++			<0xeb KEY_8>,
++			<0xea KEY_9>,
++			<0xe8 KEY_0>,
++			<0xe7 KEY_BACKSPACE>;
++
++	};
++
++	ir_key11 {
++		rockchip,usercode = <0xff10>;
++		rockchip,key_table =
++			<0xf6 KEY_1>,
++			<0xe2 KEY_2>,
++			<0xe0 KEY_3>,
++			<0xf2 KEY_4>,
++			<0xe6 KEY_5>,
++			<0xe4 KEY_6>,
++			<0xee KEY_7>,
++			<0xea KEY_8>,
++			<0xe8 KEY_9>,
++			<0xed KEY_0>,
++			<0xeb KEY_POWER>,
++			<0xfe KEY_I>,
++			<0xb7 KEY_HOMEPAGE>,
++			<0xa3 KEY_BACK>,
++			<0xa7 KEY_VOLUMEDOWN>,
++			<0xf4 KEY_VOLUMEUP>,
++			<0xe3 KEY_MUTE>,
++			<0xf8 KEY_ENTER>,
++			<0xfc KEY_UP>,
++			<0xfd KEY_DOWN>,
++			<0xf1 KEY_LEFT>,
++			<0xe5 KEY_RIGHT>,
++			<0xe9 KEY_F7>,
++			<0xb3 KEY_ENTER>,
++			<0xbf KEY_YELLOW>,
++			<0xbb KEY_BLUE>,
++			<0xec KEY_O>,
++			<0xf3 KEY_SEARCH>;
++
++	};
++
++	ir_key12 {
++		rockchip,usercode = <0x1980>;
++		rockchip,key_table =
++			<0xab KEY_1>,
++			<0xe4 KEY_2>,
++			<0xea KEY_3>,
++			<0xad KEY_4>,
++			<0xed KEY_5>,
++			<0xee KEY_6>,
++			<0xb3 KEY_7>,
++			<0xf1 KEY_8>,
++			<0xf2 KEY_9>,
++			<0xf3 KEY_0>,
++			<0xef KEY_POWER>,
++			<0xbd KEY_I>,
++			<0xe0 KEY_HOMEPAGE>,
++			<0xe7 KEY_BACK>,
++			<0xe3 KEY_VOLUMEDOWN>,
++			<0xe2 KEY_VOLUMEUP>,
++			<0xf7 KEY_MUTE>,
++			<0xaf KEY_ENTER>,
++			<0xe8 KEY_UP>,
++			<0xe9 KEY_DOWN>,
++			<0xb0 KEY_LEFT>,
++			<0xae KEY_RIGHT>,
++			<0xf4 KEY_F7>,
++			<0xe1 KEY_ENTER>,
++			<0xb5 KEY_YELLOW>,
++			<0xb4 KEY_BLUE>,
++			<0xb7 KEY_O>,
++			<0xbe KEY_SEARCH>,
++			<0xe5 KEY_CONNECT>;
++
++	};
++
++	ir_key13 {
++		rockchip,usercode = <0xdf00>;
++		rockchip,key_table =
++			<0xab KEY_1>,
++			<0xe9 KEY_2>,
++			<0xea KEY_3>,
++			<0xaf KEY_4>,
++			<0xed KEY_5>,
++			<0xee KEY_6>,
++			<0xb3 KEY_7>,
++			<0xf1 KEY_8>,
++			<0xf2 KEY_9>,
++			<0xf3 KEY_0>,
++			<0xe3 KEY_POWER>,
++			<0xe7 KEY_I>,
++			<0xfc KEY_HOMEPAGE>,
++			<0xf5 KEY_BACK>,
++			<0xb0 KEY_VOLUMEDOWN>,
++			<0xb4 KEY_VOLUMEUP>,
++			<0xf7 KEY_MUTE>,
++			<0xf9 KEY_ENTER>,
++			<0xe5 KEY_UP>,
++			<0xb7 KEY_DOWN>,
++			<0xb8 KEY_LEFT>,
++			<0xf8 KEY_RIGHT>,
++			<0xef KEY_BACKSPACE>,
++			<0xbe KEY_ENTER>,
++			<0xe6 KEY_CHANNELUP>,
++			<0xa2 KEY_F11>,
++			<0xa3 KEY_F12>,
++			<0xbd KEY_O>,
++			<0xfe KEY_HELP>,
++			<0xa4 KEY_FIND>,
++			<0xa0 KEY_CUT>,
++			<0xa7 KEY_F8>;
++
++	};
++
++	ir_key14 {
++		rockchip,usercode = <0xc43b>;
++		rockchip,key_table =
++			<0x7e KEY_ENTER>,
++			<0x7f KEY_BACK>,
++			<0x7a KEY_UP>,
++			<0x78 KEY_DOWN>,
++			<0x7b KEY_LEFT>,
++			<0x79 KEY_RIGHT>,
++			<0x66 KEY_VOLUMEUP>,
++			<0x65 KEY_VOLUMEDOWN>,
++			<0x69 KEY_POWER>,
++			<0x64 KEY_MUTE>,
++			<0x76 KEY_1>,
++			<0x75 KEY_2>,
++			<0x74 KEY_3>,
++			<0x73 KEY_4>,
++			<0x72 KEY_5>,
++			<0x71 KEY_6>,
++			<0x70 KEY_7>,
++			<0x6f KEY_8>,
++			<0x6e KEY_9>,
++			<0x77 KEY_0>,
++			<0x7c KEY_PAGEDOWN>,
++			<0x7d KEY_PAGEUP>,
++			<0x6a KEY_SETUP>,
++			<0x68 0xf9>,
++			<0x67 0xfa>,
++			<0x39 0x10f>,
++			<0x29 0xfb>,
++			<0x33 0xfc>,
++			<0x2d 0xfe>,
++			<0x2c 0xff>,
++			<0x2b 0x100>,
++			<0x2e 0xfd>,
++			<0x63 0x101>,
++			<0x6c 0x102>,
++			<0x6d 0x103>,
++			<0x62 KEY_PLAYPAUSE>,
++			<0x6b KEY_EQUAL>,
++			<0x61 KEY_FASTFORWARD>,
++			<0x60 KEY_REWIND>,
++			<0x3b KEY_STOP>;
++
++	};
++
++	ir_key15 {
++		rockchip,usercode = <0xee11>;
++		rockchip,key_table =
++			<0xea KEY_ENTER>,
++			<0xed KEY_BACK>,
++			<0xeb KEY_UP>,
++			<0xe9 KEY_DOWN>,
++			<0xe2 KEY_LEFT>,
++			<0xee KEY_RIGHT>,
++			<0xb4 KEY_VOLUMEUP>,
++			<0xe3 KEY_VOLUMEDOWN>,
++			<0xbc KEY_POWER>,
++			<0xb8 KEY_MUTE>,
++			<0xa2 KEY_I>,
++			<0xab 0x106>,
++			<0xbd KEY_1>,
++			<0xbe KEY_2>,
++			<0xbf KEY_3>,
++			<0xb9 KEY_4>,
++			<0xba KEY_5>,
++			<0xbb KEY_6>,
++			<0xb5 KEY_7>,
++			<0xb6 KEY_8>,
++			<0xb7 KEY_9>,
++			<0xb2 KEY_0>,
++			<0xef KEY_PAGEDOWN>,
++			<0xe7 KEY_PAGEUP>,
++			<0xaa KEY_SETUP>,
++			<0xae 0xf9>,
++			<0xaf 0xfa>,
++			<0xe1 0xfb>,
++			<0xa0 0xfd>,
++			<0xa4 0xfe>,
++			<0xa8 0xff>,
++			<0xac 0x100>,
++			<0xd5 0x101>,
++			<0xa6 KEY_EQUAL>,
++			<0xe4 KEY_PLAYPAUSE>,
++			<0xe5 0x103>,
++			<0xe6 0x102>;
++
++	};
++
++	ir_key16 {
++		rockchip,usercode = <0x3bc4>;
++		rockchip,key_table =
++			<0x81 KEY_ENTER>,
++			<0x80 KEY_BACK>,
++			<0x85 KEY_UP>,
++			<0x87 KEY_DOWN>,
++			<0x84 KEY_LEFT>,
++			<0x86 KEY_RIGHT>,
++			<0x99 KEY_VOLUMEUP>,
++			<0x9a KEY_VOLUMEDOWN>,
++			<0x96 KEY_POWER>,
++			<0x9b KEY_MUTE>,
++			<0x89 KEY_1>,
++			<0x8a KEY_2>,
++			<0x8b KEY_3>,
++			<0x8c KEY_4>,
++			<0x8d KEY_5>,
++			<0x8e KEY_6>,
++			<0x8f KEY_7>,
++			<0x90 KEY_8>,
++			<0x91 KEY_9>,
++			<0x88 KEY_0>,
++			<0x83 KEY_PAGEDOWN>,
++			<0x82 KEY_PAGEUP>,
++			<0x95 KEY_SETUP>,
++			<0x97 0xf9>,
++			<0x98 0xfa>,
++			<0xc6 0x104>,
++			<0xd6 0xfb>,
++			<0xd7 0x10e>,
++			<0xcc 0xfc>,
++			<0xc3 0x108>,
++			<0xd1 0xfd>,
++			<0xd2 0xfe>,
++			<0xd3 0xff>,
++			<0xd4 0x100>,
++			<0xc7 0xfd>,
++			<0xc8 0xfe>,
++			<0xc9 0xff>,
++			<0xca 0x100>,
++			<0xcd 0x109>,
++			<0xce 0x10a>,
++			<0xcf KEY_HELP>,
++			<0xd0 0x10b>,
++			<0x9c 0x101>,
++			<0x93 0x102>,
++			<0x92 0x103>,
++			<0xc0 KEY_END>,
++			<0xc1 0x107>,
++			<0x9d KEY_PLAYPAUSE>,
++			<0xc4 KEY_STOP>,
++			<0x94 KEY_EQUAL>,
++			<0x9e KEY_YELLOW>,
++			<0x9f KEY_BLUE>,
++			<0xcb 0x105>,
++			<0xc5 0x106>;
++
++	};
++
++	ir_key17 {
++		rockchip,usercode = <0xdd22>;
++		rockchip,key_table =
++			<0x31 KEY_ENTER>,
++			<0x6a KEY_BACK>,
++			<0x35 KEY_UP>,
++			<0x2d KEY_DOWN>,
++			<0x66 KEY_LEFT>,
++			<0x3e KEY_RIGHT>,
++			<0x7f KEY_VOLUMEUP>,
++			<0x7e KEY_VOLUMEDOWN>,
++			<0x23 KEY_POWER>,
++			<0x63 KEY_MUTE>,
++			<0x6d KEY_1>,
++			<0x6c KEY_2>,
++			<0x33 KEY_3>,
++			<0x71 KEY_4>,
++			<0x70 KEY_5>,
++			<0x37 KEY_6>,
++			<0x75 KEY_7>,
++			<0x74 KEY_8>,
++			<0x3b KEY_9>,
++			<0x78 KEY_0>,
++			<0x73 KEY_PAGEDOWN>,
++			<0x22 KEY_PAGEUP>,
++			<0x72 KEY_SETUP>,
++			<0x7a 0xf9>,
++			<0x79 0xfa>,
++			<0x77 0xfb>,
++			<0x2f 0xfc>,
++			<0x32 0xfd>,
++			<0x6e 0xfe>,
++			<0x7c 0xff>,
++			<0x3c 0x100>,
++			<0x3a KEY_HELP>,
++			<0x67 0x101>,
++			<0x25 0x103>,
++			<0x7d KEY_I>,
++			<0x3f KEY_EQUAL>,
++			<0x29 KEY_O>,
++			<0x26 KEY_PLAYPAUSE>,
++			<0x76 KEY_BLUE>,
++			<0x7b KEY_YELLOW>,
++			<0x69 KEY_F8>;
++
++	};
++
++	ir_key18 {
++		rockchip,usercode = <0x4cb3>;
++		rockchip,key_table =
++			<0x31 KEY_ENTER>,
++			<0x3a KEY_BACK>,
++			<0x35 KEY_UP>,
++			<0x2d KEY_DOWN>,
++			<0x66 KEY_LEFT>,
++			<0x3e KEY_RIGHT>,
++			<0x7f KEY_VOLUMEUP>,
++			<0x7e KEY_VOLUMEDOWN>,
++			<0x23 KEY_POWER>,
++			<0x63 KEY_MUTE>,
++			<0x6d KEY_1>,
++			<0x6c KEY_2>,
++			<0x33 KEY_3>,
++			<0x71 KEY_4>,
++			<0x70 KEY_5>,
++			<0x37 KEY_6>,
++			<0x75 KEY_7>,
++			<0x74 KEY_8>,
++			<0x3b KEY_9>,
++			<0x78 KEY_0>,
++			<0x73 KEY_PAGEDOWN>,
++			<0x22 KEY_PAGEUP>,
++			<0x72 KEY_SETUP>,
++			<0x7a 0xf9>,
++			<0x79 0xfa>,
++			<0x77 0xfb>,
++			<0x29 0xfc>,
++			<0x32 0xfd>,
++			<0x6e 0xfe>,
++			<0x7c 0xff>,
++			<0x3c 0x100>,
++			<0x67 0x101>,
++			<0x25 0x102>,
++			<0x2f 0x103>,
++			<0x7d 0x104>,
++			<0x6a KEY_PLAYPAUSE>,
++			<0xb KEY_EQUAL>;
++
++	};
++
++	ir_key19 {
++		rockchip,usercode = <0x1608>;
++		rockchip,key_table =
++			<0x4c KEY_ENTER>,
++			<0x4d KEY_BACK>,
++			<0x4b KEY_UP>,
++			<0x4a KEY_DOWN>,
++			<0x49 KEY_LEFT>,
++			<0x48 KEY_RIGHT>,
++			<0x4e KEY_HOMEPAGE>,
++			<0xb KEY_VOLUMEUP>,
++			<0xc KEY_VOLUMEDOWN>,
++			<0x23 KEY_POWER>,
++			<0x45 KEY_MUTE>,
++			<0x44 KEY_I>,
++			<0x78 KEY_1>,
++			<0x77 KEY_2>,
++			<0x76 KEY_3>,
++			<0x75 KEY_4>,
++			<0x74 KEY_5>,
++			<0x73 KEY_6>,
++			<0x72 0x102>,
++			<0x71 KEY_8>,
++			<0x70 KEY_9>,
++			<0x79 KEY_0>,
++			<0x43 KEY_EQUAL>,
++			<0x5f KEY_SETUP>,
++			<0x25 0xfd>,
++			<0x24 0xfe>,
++			<0x21 0xff>,
++			<0x20 0x100>;
++	};
++
++};
+diff -ruPN linux/arch/arm/boot/dts/rk322x-cpu-opp.dtsi linux-trip/arch/arm/boot/dts/rk322x-cpu-opp.dtsi
+--- linux/arch/arm/boot/dts/rk322x-cpu-opp.dtsi	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk322x-cpu-opp.dtsi	2023-02-22 17:02:43.361894340 +0100
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
++ */
++
++/ {
++	compatible = "rockchip,rk3229";
++
++	/delete-node/ opp-table0;
++
++	cpu0_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-408000000 {
++			opp-hz = /bits/ 64 <408000000>;
++			opp-microvolt = <975000 975000 1275000>;
++			clock-latency-ns = <40000>;
++			opp-suspend;
++		};
++		opp-600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <1000000 1000000 1275000>;
++		};
++		opp-816000000 {
++			opp-hz = /bits/ 64 <816000000>;
++			opp-microvolt = <1025000 1025000 1275000>;
++		};
++		opp-1008000000 {
++			opp-hz = /bits/ 64 <1008000000>;
++			opp-microvolt = <1075000 1075000 1275000>;
++		};
++		opp-1104000000 {
++			opp-hz = /bits/ 64 <1104000000>;
++			opp-microvolt = <1125000 1125000 1200000>;
++		};
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1175000 1175000 1275000>;
++		};
++		opp-1296000000 {
++			opp-hz = /bits/ 64 <1296000000>;
++			opp-microvolt = <1225000 1225000 1275000>;
++		};
++    };
++};
+diff -ruPN linux/arch/arm/boot/dts/rk322x-dram-full.dtsi linux-trip/arch/arm/boot/dts/rk322x-dram-full.dtsi
+--- linux/arch/arm/boot/dts/rk322x-dram-full.dtsi	1970-01-01 01:00:00.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk322x-dram-full.dtsi	2023-02-22 17:01:47.059898585 +0100
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
++ */
++
++/ {
++	compatible = "rockchip,rk3229";
++
++};
++
++&dmc_opp_table {
++
++		opp-500000000 {
++			status = "okay";
++		};
++		opp-600000000 {
++			status = "okay";
++		};
++
++		opp-800000000 {
++			status = "okay";
++		};
++
++};
+diff -ruPN linux/arch/arm/boot/dts/rk322x.dtsi linux-trip/arch/arm/boot/dts/rk322x.dtsi
+--- linux/arch/arm/boot/dts/rk322x.dtsi	2022-03-13 16:23:25.000000000 +0100
++++ linux-trip/arch/arm/boot/dts/rk322x.dtsi	2023-02-26 10:16:12.323938074 +0100
+@@ -37,6 +37,7 @@
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			clock-latency = <40000>;
+ 			clocks = <&cru ARMCLK>;
++			clock-frequency = <1392000000>;
+ 			enable-method = "psci";
+ 		};
+ 
+@@ -47,6 +48,8 @@
+ 			resets = <&cru SRST_CORE1>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+ 			#cooling-cells = <2>; /* min followed by max */
++			clocks = <&cru ARMCLK>;
++			clock-frequency = <1392000000>;
+ 			enable-method = "psci";
+ 		};
+ 
+@@ -57,6 +60,8 @@
+ 			resets = <&cru SRST_CORE2>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+ 			#cooling-cells = <2>; /* min followed by max */
++			clocks = <&cru ARMCLK>;
++			clock-frequency = <1392000000>;
+ 			enable-method = "psci";
+ 		};
+ 
+@@ -67,6 +72,8 @@
+ 			resets = <&cru SRST_CORE3>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+ 			#cooling-cells = <2>; /* min followed by max */
++			clocks = <&cru ARMCLK>;
++			clock-frequency = <1392000000>;
+ 			enable-method = "psci";
+ 		};
+ 	};
+@@ -126,19 +133,20 @@
+ 
+ 		opp-330000000 {
+ 			opp-hz = /bits/ 64 <330000000>;
+-			opp-microvolt = <1050000 1000000 1200000>;
++			opp-microvolt = <1050000 1050000 1150000>;
+ 		};
+-		opp-534000000 {
+-			opp-hz = /bits/ 64 <534000000>;
+-			opp-microvolt = <1050000 1000000 1200000>;
++		opp-500000000 {
++			opp-hz = /bits/ 64 <500000000>;
++			opp-microvolt = <1050000 1050000 1150000>;
+ 		};
+ 		opp-600000000 {
+ 			opp-hz = /bits/ 64 <600000000>;
+-			opp-microvolt = <1100000 1000000 1200000>;
++			opp-microvolt = <1150000 1050000 1150000>;
++			status = "disabled";
+ 		};
+-		opp-786000000 {
+-			opp-hz = /bits/ 64 <786000000>;
+-			opp-microvolt = <1100000 1000000 1200000>;
++		opp-800000000 {
++			opp-hz = /bits/ 64 <800000000>;
++			opp-microvolt = <1150000 1050000 1150000>;
+ 			status = "disabled";
+ 		};
+ 	};
+@@ -195,6 +203,20 @@
+ 		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
+ 	};
+ 
++	analog_sound: analog-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,mclk-fs = <256>;
++		simple-audio-card,name = "Analog";
++		status = "disabled";
++		simple-audio-card,cpu {
++			sound-dai = <&i2s1>;
++		};
++		simple-audio-card,codec {
++			sound-dai = <&codec>;
++		};
++	};
++
+ 	hdmi_sound: hdmi-sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "hdmi-sound";
+@@ -245,6 +267,8 @@
+ 		clocks = <&cru HCLK_M_CRYPTO>, <&cru HCLK_S_CRYPTO>,
+ 		<&cru SCLK_CRYPTO>, <&cru ACLK_DMAC>;
+ 		clock-names = "aclk", "hclk", "sclk", "apb_pclk";
++		assigned-clocks = <&cru SCLK_CRYPTO>, <&cru HCLK_S_CRYPTO>;
++		assigned-clock-rates = <150000000>, <100000000>;
+ 		resets = <&cru SRST_CRYPTO>;
+ 		reset-names = "crypto-rst";
+ 	};
+@@ -655,24 +679,29 @@
+ 				map0 {
+ 					trip = <&cpu_alert0>;
+ 					cooling-device =
+-						<&cpu0 THERMAL_NO_LIMIT 6>,
+-						<&cpu1 THERMAL_NO_LIMIT 6>,
+-						<&cpu2 THERMAL_NO_LIMIT 6>,
+-						<&cpu3 THERMAL_NO_LIMIT 6>;
++						<&cpu0 THERMAL_NO_LIMIT 2>,
++						<&cpu1 THERMAL_NO_LIMIT 2>,
++						<&cpu2 THERMAL_NO_LIMIT 2>,
++						<&cpu3 THERMAL_NO_LIMIT 2>;
+ 				};
+ 				map1 {
+ 					trip = <&cpu_alert1>;
+ 					cooling-device =
+-						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						<&cpu0 THERMAL_NO_LIMIT 4>,
++						<&cpu1 THERMAL_NO_LIMIT 4>,
++						<&cpu2 THERMAL_NO_LIMIT 4>,
++						<&cpu3 THERMAL_NO_LIMIT 4>;
+ 				};
+ 				map2 {
+ 					trip = <&cpu_alert1>;
+ 					cooling-device =
+ 						<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++				map3 {
++					trip = <&cpu_alert1>;
++					cooling-device =
++						<&dmc THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
+ 			};
+ 		};
+ 	};
+@@ -735,19 +764,25 @@
+ 	gpu_opp_table: opp-table2 {
+ 		compatible = "operating-points-v2";
+ 
++		opp-200000000 {
++			opp-hz = /bits/ 64 <200000000>;
++			opp-microvolt = <1050000 1050000 1150000>;
++		};
++
+ 		opp-300000000 {
+ 			opp-hz = /bits/ 64 <300000000>;
+-			opp-microvolt = <1100000 1000000 1200000>;
++			opp-microvolt = <1050000 1050000 1150000>;
+ 		};
+ 
+ 		opp-400000000 {
+ 			opp-hz = /bits/ 64 <400000000>;
+-			opp-microvolt = <1100000 1000000 1200000>;
++			opp-microvolt = <1100000 1050000 1150000>;
+ 		};
+ 
+ 		opp-500000000 {
+ 			opp-hz = /bits/ 64 <500000000>;
+-			opp-microvolt = <1100000 1000000 1200000>;
++			opp-microvolt = <1100000 1050000 1150000>;
++			status = "disabled";
+ 		};
+ 	};
+ 
+@@ -949,7 +984,7 @@
+ 		bus-width = <8>;
+ 		rockchip,default-sample-phase = <158>;
+ 		fifo-depth = <0x100>;
+-		max-frequency = <150000000>;
++		max-frequency = <100000000>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+ 		resets = <&cru SRST_EMMC>;

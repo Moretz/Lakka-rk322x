@@ -776,7 +776,7 @@ index d7ba824fe6ad..1dccfb74516d 100644
 +		DRM_DEV_ERROR(hdmi->dev, "Failed to enable vpll: %d\n", ret);
  		return ret;
  	}
- 
+
  	drm_encoder_helper_add(encoder, &dw_hdmi_rockchip_encoder_helper_funcs);
 -	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
 +	ret = drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
@@ -784,10 +784,10 @@ index d7ba824fe6ad..1dccfb74516d 100644
 +		DRM_DEV_ERROR(hdmi->dev, "Failed to init encoder: %d\n", ret);
 +		goto err_disable_clk;
 +	}
- 
+
  	platform_set_drvdata(pdev, hdmi);
- 
-@@ -542,10 +545,18 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
+
+@@ -557,10 +560,18 @@
  	 */
  	if (IS_ERR(hdmi->hdmi)) {
  		ret = PTR_ERR(hdmi->hdmi);
@@ -797,7 +797,7 @@ index d7ba824fe6ad..1dccfb74516d 100644
 +			DRM_DEV_ERROR(hdmi->dev, "Failed to init dw-hdmi bridge: %d\n", ret);
 +		goto err_encoder_cleanup;
  	}
- 
+
 +	return 0;
 +
 +err_encoder_cleanup:
@@ -807,7 +807,6 @@ index d7ba824fe6ad..1dccfb74516d 100644
 +
  	return ret;
  }
- 
 
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
