@@ -85,3 +85,10 @@
 
   # debug tty path
     DEBUG_TTY="/dev/ttyS2"
+    
+  # Lakka: hardcode output resolution to 1080p
+    if [ "${DISTRO}" = "Lakka" ]; then
+      EXTRA_CMDLINE+=" video=HDMI-A-1:1280x720@60"
+    fi
+
+  # set the addon project

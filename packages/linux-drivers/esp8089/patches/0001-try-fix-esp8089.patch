@@ -1,0 +1,30 @@
+diff -ruPN esp8089/Makefile esp8089-new/Makefile
+--- esp8089/Makefile	2021-06-27 04:39:25.000000000 +0200
++++ esp8089-new/Makefile	2022-07-04 11:30:07.988289696 +0200
+@@ -64,7 +64,7 @@
+     -DKERNEL_IV_WAR -DRX_SENDUP_SYNC -DDEBUG_FS \
+     -DSIF_DSR_WAR -DHAS_INIT_DATA -DHAS_FW 
+ 
+-EXTRA_CFLAGS += -DP2P_CONCURRENT -DESP_USE_SDIO
++EXTRA_CFLAGS += -DP2P_CONCURRENT -DESP_USE_SDIO -Os -s
+ 
+ ifdef ANDROID
+ EXTRA_CFLAGS += -DANDROID
+diff -ruPN esp8089/sdio_stub.c esp8089-new/sdio_stub.c
+--- esp8089/sdio_stub.c	2021-06-27 04:39:25.000000000 +0200
++++ esp8089-new/sdio_stub.c	2022-07-04 11:28:32.934285716 +0200
+@@ -47,12 +47,12 @@
+ {
+ 	/* reset ESP before unload so that the esp can be probed on
+ 	 * warm reboot */
+-	sif_platform_reset_target();
++	/*sif_platform_reset_target();*/
+ }
+ 
+ void sif_platform_target_poweron(void)
+ {
+-	sif_platform_reset_target();
++	/*sif_platform_reset_target();*/
+ }
+ 
+ void sif_platform_target_speed(int high_speed)
